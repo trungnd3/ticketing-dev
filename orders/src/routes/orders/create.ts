@@ -60,6 +60,7 @@ createRouter.post(
     // Publish an event saying that an order has been created
     await new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order.id,
+      version: order.version,
       userId: order.userId,
       status: OrderStatus.Created,
       expiresAt: order.expiresAt.toISOString(),
