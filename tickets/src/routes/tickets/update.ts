@@ -1,6 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
 import {
+  BadRequestError,
   NotAuthorizedError,
   NotFoundError,
   requireAuth,
@@ -29,6 +30,10 @@ updateRouter.put(
     const existingTicket = await Ticket.findById(id);
     if (!existingTicket) {
       throw new NotFoundError('Ticket does not exist.');
+    }
+
+    if (existingTicket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket.');
     }
 
     if (existingTicket.userId !== req.currentUser!.id) {
