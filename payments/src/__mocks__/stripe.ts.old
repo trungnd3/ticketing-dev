@@ -1,0 +1,6 @@
+//@ts-ignore
+export const stripe = {
+  charges: {
+    create: jest.fn().mockResolvedValue({}),
+  },
+};
