@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { headers } from 'next/headers';
-import axios from 'axios';
+// import { headers } from 'next/headers';
+// import axios from 'axios';
 
 import './globals.css';
 import Header from '@/components/layouts/header';
+import { AppContextProvider } from '@/contexts/app';
+import { getCurrentUser } from '@/query/users';
+import { getAllTickets } from '@/query/tickets';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,25 +29,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const rHeaders = await headers();
-
-  const res = await axios(
-    'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
-    {
-      headers: {
-        host: rHeaders.get('host'),
-        cookie: rHeaders.get('cookie'),
-      },
-    }
-  );
+  const userRes = await getCurrentUser();
+  const ticketsRes = await getAllTickets();
 
   return (
     <html lang='en'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-100`}
       >
-        <Header currentUser={res.data.currentUser} />
-        <main className='h-dvh'>{children}</main>
+        <AppContextProvider
+          currentUser={userRes.data ? userRes.data.currentUser : null}
+          tickets={ticketsRes.data ? ticketsRes.data : []}
+        >
+          <Header />
+          <main className='h-dvh flex justify-center pt-6'>{children}</main>
+        </AppContextProvider>
       </body>
     </html>
   );

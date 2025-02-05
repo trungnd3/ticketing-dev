@@ -1,5 +1,6 @@
 'use client';
 
+import { useContext } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +16,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRequest } from '@/hooks/use-request';
 import { useRouter } from 'next/navigation';
+import { AppContext } from '@/contexts/app';
+import { IUser } from '@/interfaces/user';
 
 const formSchema = z
   .object({
@@ -51,11 +54,13 @@ export default function SignupForm() {
       confirmPassword: '',
     },
   });
+  const { setUser } = useContext(AppContext);
 
-  const { doRequest } = useRequest<{ email: string; password: string }>({
+  const { doRequest } = useRequest<{ email: string; password: string }, IUser>({
     url: '/api/users/signup',
     method: 'post',
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setUser({ email: data.email });
       router.push('/');
     },
     onError(err) {

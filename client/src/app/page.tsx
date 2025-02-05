@@ -1,3 +1,9 @@
+import Landing from '@/components/common/landing';
+
 export default async function HomePage() {
-  return <h1>Landing Page</h1>;
+  return (
+    <div className='flex justify-between w-3/5'>
+      <Landing />
+    </div>
+  );
 }

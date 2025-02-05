@@ -2,14 +2,12 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useContext } from 'react';
+import { AppContext } from '@/contexts/app';
 
-interface HeaderProps {
-  currentUser: {
-    email: string;
-  } | null;
-}
+export default function Header() {
+  const { currentUser } = useContext(AppContext);
 
-export default function Header({ currentUser }: HeaderProps) {
   return (
     <header className='flex justify-center bg-slate-300'>
       <nav className='flex justify-between items-center w-3/5 h-16'>
@@ -22,9 +20,17 @@ export default function Header({ currentUser }: HeaderProps) {
           </Link>
         </Button>
         {currentUser !== null && (
-          <Button asChild variant='outline'>
-            <Link href='/auth/sign-out'>Sign Out</Link>
-          </Button>
+          <div className='flex gap-4'>
+            <Button asChild variant='default'>
+              <Link href='/tickets/new'>Sell Ticket</Link>
+            </Button>
+            <Button asChild variant='secondary'>
+              <Link href='/orders'>My Orders</Link>
+            </Button>
+            <Button asChild variant='ghost'>
+              <Link href='/auth/sign-out'>Sign Out</Link>
+            </Button>
+          </div>
         )}
         {currentUser === null && (
           <Button asChild variant='secondary'>

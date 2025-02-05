@@ -1,18 +1,18 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-interface TUseRequestHook {
+interface TUseRequestHook<K> {
   url: string;
   method: 'post' | 'get';
-  onSuccess: (data: unknown | undefined) => void | undefined;
+  onSuccess: (data: K) => void;
   onError: (err: unknown | undefined) => void | undefined;
 }
 
-export function useRequest<T>({
+export function useRequest<T, K>({
   url,
   method,
   onSuccess,
   onError,
-}: TUseRequestHook) {
+}: TUseRequestHook<K>) {
   async function doRequest(body: T & AxiosRequestConfig<T>) {
     try {
       const response = await axios[method](url, body);

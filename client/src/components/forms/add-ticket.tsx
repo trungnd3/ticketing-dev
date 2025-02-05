@@ -15,37 +15,33 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRequest } from '@/hooks/use-request';
+// import { useContext } from 'react';
+// import { AppContext } from '@/contexts/app';
+import { ITicket } from '@/interfaces/ticket';
 import { useContext } from 'react';
 import { AppContext } from '@/contexts/app';
-import { IUser } from '@/interfaces/user';
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Email cannot be empty.' })
-    .email('This is not a valid email.'),
-  password: z
-    .string()
-    .min(4, { message: 'Password too short.' })
-    .max(20, { message: 'Password too long.' }),
+  title: z.string().min(1, { message: 'Title cannot be empty.' }),
+  price: z.string(),
 });
 
-export default function SigninForm() {
+export default function AddTicketForm() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      title: '',
+      price: '',
     },
   });
-  const { setUser } = useContext(AppContext);
+  const { onTicketAdded } = useContext(AppContext);
 
-  const { doRequest } = useRequest<z.infer<typeof formSchema>, IUser>({
-    url: '/api/users/signin',
+  const { doRequest } = useRequest<z.infer<typeof formSchema>, ITicket>({
+    url: '/api/tickets',
     method: 'post',
     onSuccess: (data) => {
-      setUser({ email: data.email });
+      onTicketAdded(data);
       router.push('/');
     },
     onError(err) {
@@ -64,35 +60,32 @@ export default function SigninForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
         <FormField
           control={form.control}
-          name='email'
+          name='title'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='Email' {...field} />
+                <Input placeholder='Title' {...field} />
               </FormControl>
-              <FormDescription>
-                Your email must in in correct format.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name='password'
+          name='price'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='Password' {...field} type='password' />
+                <Input placeholder='Price' {...field} type='text' />
               </FormControl>
               <FormDescription>
-                Your password has minimum of 4 and maximum of 20 characters.
+                The price must be a float number with two digits after the dot.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit'>Sign In</Button>
+        <Button type='submit'>Create</Button>
       </form>
     </Form>
   );
