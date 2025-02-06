@@ -15,13 +15,6 @@ spec:
       containers:
         - name: client
           image: trunglinh53/ticketing-dev-client
-          resources:
-            limits:
-              memory: 1024Mi
-              cpu: '0.25'
-            requests:
-              memory: 256Mi
-              cpu: '0.2'
           ports:
             - containerPort: 3000
 ---
