@@ -15,13 +15,6 @@ spec:
       containers:
         - name: payments
           image: trunglinh53/ticketing-dev-payments
-          resources:
-            limits:
-              memory: 512Mi
-              cpu: '0.25'
-            requests:
-              memory: 256Mi
-              cpu: '0.2'
           ports:
             - containerPort: 3000
           env:

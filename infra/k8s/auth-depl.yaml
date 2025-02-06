@@ -16,13 +16,6 @@ spec:
         - name: auth
           image: trunglinh53/ticketing-dev-auth
           #image: us.gcr.io/ticketing-dev-445716/auth
-          resources:
-            limits:
-              memory: 512Mi
-              cpu: '0.25'
-            requests:
-              memory: 256Mi
-              cpu: '0.2'
           ports:
             - containerPort: 3000
           env:
